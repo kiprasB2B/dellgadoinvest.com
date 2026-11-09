@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dellgado.invest</title>
+<meta name="description" content="Dellgado.invest – 28 films for traders across four levels, from your first trade to market microstructure.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap">
+<style>
+:root{
+  --navy:#002941; --sky:#B6DFED; --coral:#FD6E6E;
+  --bg:var(--sky); --ink:var(--navy); --muted:#335C71;
+  --line:rgba(0,41,65,.22); --raised:rgba(255,255,255,.4);
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:var(--navy); --ink:var(--sky); --muted:#8AB3C4;
+    --line:rgba(182,223,237,.2); --raised:rgba(182,223,237,.07);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:var(--navy); --ink:var(--sky); --muted:#8AB3C4;
+  --line:rgba(182,223,237,.2); --raised:rgba(182,223,237,.07);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 92px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Archivo','Helvetica Neue',Arial,sans-serif;font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased;transition:background-color .4s,color .4s}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--bg)}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--coral);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1180px;margin-inline:auto;padding-inline:clamp(20px,5vw,56px)}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:16px;top:16px;z-index:60;background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:8px}
+.btn{font:inherit;font-size:16px;font-weight:700;min-height:48px;padding:0 20px;border-radius:999px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;transition:transform .15s,filter .15s}
+.btn:active{transform:scale(.97)}
+.btn svg{width:20px;height:20px;flex:none}
+.btn-accent{background:var(--coral);border-color:var(--coral);color:var(--navy)}
+.btn-accent:hover{filter:brightness(1.06)}
+.btn-sm{min-height:44px;font-size:15px;padding:0 16px}
+
+/* ticker */
+.ticker{border-bottom:1px solid var(--line);overflow:hidden}
+.ticker-track{display:flex;width:max-content;animation:tick 140s linear infinite}
+.ticker:hover .ticker-track,.ticker:focus-within .ticker-track{animation-play-state:paused}
+.tick-set{display:flex}
+.tick{display:flex;align-items:center;gap:10px;padding:12px 22px;text-decoration:none;font-size:14px;white-space:nowrap;border-right:1px solid var(--line)}
+.tick b{font-stretch:125%;font-weight:800;letter-spacing:.02em}
+.tick .y{color:var(--muted);font-variant-numeric:tabular-nums}
+.tick-st{width:12px;height:12px;border-radius:50%;border:2px solid var(--ink);flex:none;transition:background .3s,border-color .3s}
+.tick.on .tick-st{background:var(--coral);border-color:var(--coral)}
+.tick:hover b{text-decoration:underline;text-underline-offset:3px}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* hero */
+.hero{padding-top:clamp(18px,3vw,28px);position:relative}
+.hero-top{display:flex;justify-content:space-between;align-items:center;gap:16px}
+.brand{display:inline-flex;align-items:center;min-height:44px;font-size:20px;font-weight:800;font-stretch:125%;letter-spacing:-.01em;text-decoration:none}
+h1{margin:clamp(18px,3.5vw,40px) auto 0;font-size:clamp(52px,10.5vw,158px);font-weight:800;font-stretch:125%;line-height:.86;letter-spacing:-.025em}
+.lede{margin:22px auto 0;font-size:clamp(18px,2vw,22px);line-height:1.4}
+.lede span{display:block;max-width:44ch}
+.lights{flex:none}
+.chart-zone{position:relative;margin-top:18px}
+.chart-scroll{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.chart-scroll svg{display:block;width:100%;min-width:760px;height:auto}
+.grid-l{stroke:var(--line);stroke-width:1;stroke-dasharray:4 7}
+.c{cursor:pointer}
+.c-hit{fill:transparent}
+.c-wick{stroke:var(--ink);stroke-width:2;stroke-linecap:round}
+.c-body{fill:var(--bg);stroke:var(--ink);stroke-width:2;transition:fill .35s ease,transform .2s ease;transform-box:fill-box;transform-origin:center}
+.c.up .c-body{fill:var(--ink)}
+.c.watched .c-body{fill:var(--coral);stroke:var(--coral)}
+.c:hover .c-body,.c:focus-visible .c-body{transform:scaleX(1.35)}
+.c:focus{outline:none}
+.c:focus-visible .c-hit{stroke:var(--coral);stroke-width:2}
+.pin{cursor:pointer}
+.pin circle{fill:var(--coral);stroke:var(--bg);stroke-width:3;transition:r .2s}
+.pin:hover circle,.pin:focus-visible circle{r:25}
+.pin text{fill:var(--navy);font-family:'Archivo',sans-serif;font-weight:800;font-size:19px;font-stretch:125%;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.pin-line{stroke:var(--ink);stroke-width:1.5;stroke-dasharray:3 4;opacity:.6}
+.pin:focus{outline:none}
+.bubbles{position:absolute;inset:0;pointer-events:none}
+.bubble{position:absolute;pointer-events:auto;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none;border:0;background:none;padding:0;font:inherit;color:inherit;text-align:left;transform:translate(var(--dx,0px),var(--dy,0px))}
+.bubble.drag{cursor:grabbing;z-index:5}
+.bubble-in{display:block;position:relative;background:var(--ink);color:var(--bg);padding:10px 14px 11px;border-radius:14px;font-size:14px;line-height:1.3;max-width:210px;box-shadow:0 14px 28px -16px rgba(0,20,33,.7);animation:float var(--dur,7s) ease-in-out var(--delay,0s) infinite alternate;transition:scale .15s}
+.bubble.drag .bubble-in{scale:1.06}
+.bubble-in::after{content:"";position:absolute;left:20px;bottom:-6px;width:13px;height:13px;background:var(--ink);transform:rotate(45deg);border-radius:2px}
+.bubble-in b{display:block;font-stretch:125%;font-weight:800;font-size:12px;letter-spacing:.03em;margin-bottom:3px}
+@keyframes float{from{transform:translateY(-7px) rotate(-1.4deg)}to{transform:translateY(8px) rotate(1.4deg)}}
+.chart-hint{margin:6px auto 0;font-size:15px;color:var(--muted)}
+.chart-hint span{display:block;max-width:72ch}
+
+.hero-bottom{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:clamp(24px,4vw,48px);margin-top:clamp(28px,4vw,44px);align-items:start}
+.toc{display:flex;flex-direction:column}
+.toc-item{display:grid;grid-template-columns:56px minmax(0,1fr) auto;column-gap:14px;row-gap:8px;align-items:baseline;padding:14px 0 12px;border-top:1px solid var(--line);text-decoration:none;transition:padding-left .2s}
+.toc-item:last-child{border-bottom:1px solid var(--line)}
+.toc-item:hover{padding-left:6px}
+.toc-num{grid-row:span 2;font-size:38px;font-weight:800;font-stretch:125%;line-height:1}
+.toc-name{display:block;font-size:20px;font-weight:700;line-height:1.2}
+.toc-sub{display:block;font-size:15px;color:var(--muted)}
+.toc-count{font-variant-numeric:tabular-nums;font-size:15px;font-weight:600}
+.toc-bar{grid-column:2 / span 2;height:5px;border-radius:3px;background:var(--line);overflow:hidden}
+.toc-bar i{display:block;height:100%;width:0;background:var(--coral);border-radius:3px;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.portfolio{background:var(--raised);border:1.5px solid var(--line);border-radius:20px;padding:24px}
+.portfolio h2{margin:0;font-size:19px;font-weight:700}
+.pf-big{display:flex;align-items:baseline;gap:12px;margin-top:6px}
+.pf-n{font-size:76px;font-weight:800;font-stretch:125%;line-height:1;font-variant-numeric:tabular-nums}
+.pf-of{font-size:17px;color:var(--muted)}
+.pf-ret{margin:2px 0 16px;font-size:16px}
+.pf-ret b{font-variant-numeric:tabular-nums}
+.cells{display:grid;grid-template-columns:repeat(14,minmax(0,1fr));gap:4px;margin-bottom:20px}
+.cells i{aspect-ratio:1;border-radius:3px;border:1.5px solid var(--line);transition:background .3s,border-color .3s}
+.cells i.on{background:var(--coral);border-color:var(--coral)}
+.portfolio .btn{width:100%}
+.pf-note{margin:10px 0 0;font-size:14px;color:var(--muted);text-align:center}
+
+/* sticky bar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--bg);border-block:1px solid var(--line);margin-top:clamp(40px,6vw,64px);transition:background-color .4s}
+.bar-in{display:flex;align-items:center;gap:10px 16px;padding-block:10px;overflow-x:auto;scrollbar-width:none}
+.bar-in::-webkit-scrollbar{display:none}
+.tabs{display:flex;gap:4px;flex:none}
+.tab{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 12px;border-radius:999px;text-decoration:none;font-size:15px;white-space:nowrap}
+.tab:hover{background:var(--raised)}
+.tab-k{font-weight:800;font-stretch:125%}
+.tab-c{color:var(--muted);font-variant-numeric:tabular-nums}
+.filters{display:flex;border:1.5px solid var(--line);border-radius:999px;padding:3px;flex:none;margin-left:auto}
+.seg{position:relative;display:block}
+.seg input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.seg span{display:flex;align-items:center;min-height:38px;padding:0 14px;border-radius:999px;font-size:15px;white-space:nowrap;transition:background .2s}
+.seg input:checked + span{background:var(--coral);color:var(--navy);font-weight:700}
+.seg input:focus-visible + span{outline:3px solid var(--coral);outline-offset:2px}
+.bar .btn{flex:none}
+
+/* levels */
+.level{padding-top:clamp(56px,8vw,96px)}
+.level-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px 32px;align-items:end;padding-bottom:22px;border-bottom:2px solid var(--ink)}
+.level-title{grid-column:1;margin:0;display:flex;align-items:flex-end;gap:clamp(14px,2.4vw,26px)}
+.level-num{font-size:clamp(92px,13vw,176px);font-weight:900;font-stretch:125%;line-height:.76;color:transparent;-webkit-text-stroke:2px var(--ink);transition:color .5s}
+.level.done .level-num{color:var(--coral);-webkit-text-stroke-color:var(--coral)}
+.level-name{display:flex;flex-direction:column;font-size:clamp(30px,4.4vw,56px);font-weight:800;line-height:1;letter-spacing:-.01em;padding-bottom:4px}
+.level-name small{font-size:16px;font-weight:500;color:var(--muted);letter-spacing:0;margin-top:10px}
+.level-desc{grid-column:1;margin:0;max-width:58ch;color:var(--muted)}
+.level-side{grid-column:2;grid-row:1 / span 2;display:flex;flex-direction:column;align-items:flex-end;gap:12px}
+.level-count{font-size:16px}
+.level-count b{font-size:28px;font-weight:800;font-stretch:125%;font-variant-numeric:tabular-nums}
+.meter{display:flex;gap:4px}
+.meter i{width:18px;height:10px;border-radius:3px;border:1.5px solid var(--ink);transition:background .3s,border-color .3s}
+.meter i.on{background:var(--coral);border-color:var(--coral)}
+.done-badge{display:none;align-items:center;gap:6px;font-size:14px;font-weight:700;background:var(--coral);color:var(--navy);padding:4px 12px;border-radius:999px}
+.done-badge svg{width:14px;height:14px;stroke:var(--navy);stroke-width:3;fill:none}
+.level.done .done-badge{display:inline-flex}
+.back{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border:1.5px solid var(--line);border-radius:999px;font-size:14px;text-decoration:none;white-space:nowrap}
+.back:hover{border-color:var(--ink)}
+
+.films{list-style:none;margin:0;padding:0}
+.film{border-bottom:1px solid var(--line);border-radius:12px;transition:background-color .3s}
+.film-row{display:grid;grid-template-columns:44px 74px minmax(0,1fr) auto 44px;grid-template-areas:"watch sym main meta exp";align-items:center;gap:6px 16px;padding:16px 8px 16px 0;cursor:pointer}
+.watch{grid-area:watch;width:44px;height:44px;display:grid;place-items:center;position:relative;cursor:pointer}
+.watch input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.box{width:26px;height:26px;border:2px solid var(--ink);border-radius:7px;display:grid;place-items:center;transition:background .2s,border-color .2s}
+.box svg{width:16px;height:16px;stroke:var(--navy);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:24;stroke-dashoffset:24;transition:stroke-dashoffset .28s ease .06s}
+.watch input:checked + .box{background:var(--coral);border-color:var(--coral);animation:pop .34s ease}
+.watch input:checked + .box svg{stroke-dashoffset:0}
+.watch input:focus-visible + .box{outline:3px solid var(--coral);outline-offset:3px}
+.watch:hover .box{border-color:var(--coral)}
+@keyframes pop{0%{transform:scale(.78)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
+.sym{grid-area:sym;justify-self:start;font-stretch:125%;font-weight:800;font-size:14px;letter-spacing:.02em;padding:5px 8px;border:1.5px solid var(--line);border-radius:6px;transition:background .3s,border-color .3s,color .3s}
+.film.watched .sym{background:var(--coral);border-color:var(--coral);color:var(--navy)}
+.film-main{grid-area:main;min-width:0}
+.film-main h3{margin:0;font-size:22px;font-weight:700;line-height:1.2}
+.film-main p{margin:4px 0 0;font-size:16px;line-height:1.45;max-width:72ch;text-wrap:pretty}
+.meta{grid-area:meta;font-size:15px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.exp{grid-area:exp;width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line);background:transparent;color:var(--ink);display:grid;place-items:center;cursor:pointer;transition:border-color .2s,background .2s}
+.exp:hover{border-color:var(--ink)}
+.exp svg{width:18px;height:18px;stroke:currentColor;stroke-width:2.2;fill:none;transition:transform .3s}
+.film.open .exp svg{transform:rotate(180deg)}
+.film-more{display:grid;grid-template-rows:0fr;transition:grid-template-rows .32s ease}
+.film.open .film-more{grid-template-rows:1fr}
+.film-more-in{overflow:hidden;min-height:0}
+.film-more-pad{padding:0 8px 20px 150px}
+.lesson{margin:0;background:var(--raised);border-radius:12px;padding:14px 16px;max-width:70ch}
+.lesson strong{font-weight:800}
+.rate{display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap;margin-top:12px}
+.rate-label{font-size:15px;color:var(--muted)}
+.bars{display:flex;align-items:flex-end}
+.r{width:26px;height:44px;border:0;background:none;padding:0;display:flex;align-items:flex-end;justify-content:center;cursor:pointer;padding-bottom:6px}
+.r i{display:block;width:12px;border-radius:3px;border:2px solid var(--line);transition:background .15s,border-color .15s}
+.r:hover i{border-color:var(--coral)}
+.r.on i{background:var(--coral);border-color:var(--coral)}
+.rate-val{font-size:15px;color:var(--muted);font-variant-numeric:tabular-nums}
+.film.flash{animation:flash 1.6s ease}
+@keyframes flash{0%,100%{background-color:transparent}20%,60%{background-color:var(--raised);box-shadow:inset 0 0 0 2px var(--coral)}}
+body[data-filter="unwatched"] .film.watched{display:none}
+body[data-filter="watched"] .film:not(.watched){display:none}
+.empty{margin:0;padding:22px 0;color:var(--muted)}
+
+/* route + tips */
+.route{padding-top:clamp(64px,9vw,110px)}
+.sec-title{margin:0 0 6px;font-size:clamp(30px,4.4vw,54px);font-weight:800;line-height:1.05}
+.sec-lede{margin:0 0 24px;color:var(--muted);max-width:60ch}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.step{position:relative;display:flex;flex-direction:column;gap:6px;min-height:128px;padding:16px 18px;border:1.5px solid var(--line);border-radius:16px;text-decoration:none;transition:border-color .3s,transform .2s}
+.step:hover{transform:translateY(-3px);border-color:var(--ink)}
+.step-k{font-size:15px;color:var(--muted)}
+.step-t{font-size:20px;font-weight:800;line-height:1.15;padding-right:30px}
+.step-l{margin-top:auto;font-size:14px;color:var(--muted)}
+.step-ok{position:absolute;top:14px;right:14px;width:26px;height:26px;border-radius:7px;border:2px solid var(--ink);display:grid;place-items:center;transition:background .3s,border-color .3s}
+.step-ok svg{width:15px;height:15px;stroke:var(--navy);stroke-width:3;fill:none;opacity:0;transition:opacity .2s}
+.step.done{border-color:var(--coral)}
+.step.done .step-ok{background:var(--coral);border-color:var(--coral)}
+.step.done .step-ok svg{opacity:1}
+.tips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 40px;margin:44px 0 0;padding:0;list-style:none}
+.tips li{position:relative;padding-left:26px;max-width:46ch}
+.tips li::before{content:"";position:absolute;left:0;top:.5em;width:10px;height:10px;border-radius:2px;background:var(--ink)}
+.tips h3{margin:0 0 6px;font-size:clamp(22px,2.6vw,30px);font-weight:800}
+
+footer{margin-top:clamp(64px,9vw,110px);border-top:2px solid var(--ink);padding-block:28px 40px}
+.foot{display:flex;flex-wrap:wrap;gap:16px 24px;align-items:center;justify-content:space-between}
+.slogan{margin:0;font-size:clamp(24px,3.2vw,38px);font-weight:800;font-stretch:112%;line-height:1.1}
+.foot-actions{display:flex;flex-wrap:wrap;gap:10px}
+.disc{margin:18px 0 0;font-size:14px;color:var(--muted)}
+
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);transform:translate(-50%,160%);z-index:50;display:flex;align-items:center;gap:14px;max-width:min(92vw,560px);padding:12px 12px 12px 18px;border-radius:16px;background:var(--ink);color:var(--bg);font-size:16px;box-shadow:0 18px 40px -18px rgba(0,20,33,.8);transition:transform .38s cubic-bezier(.2,.9,.2,1)}
+.toast.show{transform:translate(-50%,0)}
+.toast span{padding-block:6px}
+.toast .btn{flex:none}
+
+@media (max-width:860px){
+  .hero-bottom{grid-template-columns:1fr}
+  .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:720px){
+  .bubble:nth-child(n+4){display:none}
+  .tab-name{display:none}
+  .level-head{grid-template-columns:1fr}
+  .level-side{grid-column:1;grid-row:auto;flex-direction:row;flex-wrap:wrap;align-items:center}
+  .film-row{grid-template-columns:44px auto minmax(0,1fr) 44px;grid-template-areas:"watch sym meta exp" "watch main main exp";align-items:start;padding-right:0}
+  .watch,.exp{align-self:center}
+  .meta{align-self:center}
+  .film-more-pad{padding:0 0 18px 60px}
+  .tips{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .ticker-track,.bubble-in{animation:none}
+  .ticker{overflow-x:auto}
+  *{transition-duration:.01ms!important}
+}
+@media print{
+  :root,:root[data-theme="dark"]{--bg:#FFFFFF;--ink:#002941;--muted:#335C71;--line:#B6DFED;--raised:#EAF5FA;color-scheme:light}
+  body{font-size:11pt}
+  .ticker,.bubbles,.bar,.lights,.portfolio .btn,.pf-note,.toast,.exp,.foot-actions,.chart-hint,.skip{display:none!important}
+  .film-more{grid-template-rows:1fr!important}
+  .film-more-in{overflow:visible}
+  .level,.route{break-before:page}
+  .film{break-inside:avoid}
+  .chart-scroll svg{min-width:0}
+}
+</style>
+</head>
+<body data-filter="all">
+<a class="skip" href="#level-1">Skip to the films</a>
+
+<div class="ticker" aria-label="Film ticker – select a film">
+  <div class="ticker-track" id="ticker"></div>
+</div>
+
+<header class="hero" id="map">
+  <div class="wrap hero-top">
+    <a class="brand" href="#map">Dellgado.invest</a>
+    <button type="button" class="btn btn-sm lights" id="lights">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.6 1 2.5h6c0-.9.2-1.7 1-2.5A6 6 0 0 0 12 3z"/></svg>
+      <span id="lights-t">Dim the lights</span>
+    </button>
+  </div>
+  <h1 class="wrap">Films<br>for traders</h1>
+  <p class="wrap lede"><span>28 films across four levels, from your first trade to market microstructure. Tick off what you’ve watched and watch your portfolio grow.</span></p>
+  <div class="wrap chart-zone">
+    <div class="chart-scroll">
+      <svg id="chart" viewBox="0 0 1000 380" role="group" aria-label="Film chart: each candle is a film, each number is a level"></svg>
+    </div>
+    <div class="bubbles" id="bubbles"></div>
+  </div>
+  <p class="wrap chart-hint"><span>Each candle is a film and each number is a level. Select one to open that film or section – the link at the top of every section brings you back here. Watched films change colour. You can drag the bubbles around.</span></p>
+  <div class="wrap hero-bottom">
+    <nav class="toc" id="toc" aria-label="Contents"></nav>
+    <section class="portfolio" aria-labelledby="pf-h">
+      <h2 id="pf-h">Your portfolio</h2>
+      <div class="pf-big"><span class="pf-n" id="pf-n">0</span><span class="pf-of">of 28 films</span></div>
+      <p class="pf-ret">Return: <b id="pf-ret">+0%</b></p>
+      <div class="cells" id="cells" aria-hidden="true"></div>
+      <button type="button" class="btn btn-accent" data-pick>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><circle cx="8.5" cy="8.5" r="1.3" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg>
+        Pick a film for me
+      </button>
+      <p class="pf-note">A random film you haven’t seen yet</p>
+    </section>
+  </div>
+</header>
+
+<nav class="bar" aria-label="Navigation and filters">
+  <div class="wrap bar-in">
+    <div class="tabs" id="tabs"></div>
+    <div class="filters" role="radiogroup" aria-label="Show films">
+      <label class="seg"><input type="radio" name="flt" value="all" checked><span>All</span></label>
+      <label class="seg"><input type="radio" name="flt" value="unwatched"><span>Not watched</span></label>
+      <label class="seg"><input type="radio" name="flt" value="watched"><span>Watched</span></label>
+    </div>
+    <button type="button" class="btn btn-sm" data-pick>Pick for me</button>
+  </div>
+</nav>
+
+<main id="levels" class="wrap"></main>
+
+<section class="wrap route" id="route" aria-labelledby="route-h">
+  <h2 class="sec-title" id="route-h">Route: 4 nights, 4 levels</h2>
+  <p class="sec-lede">Not sure where to start? Follow this path. Each card ticks itself off when you mark the film as watched.</p>
+  <div class="steps" id="steps"></div>
+  <ul class="tips">
+    <li><h3>Watch like a trader</h3>Write down where the edge was in the film, and where the risk was.</li>
+    <li><h3>Check the facts</h3>After the film, look up what really happened. Cinema heightens the drama.</li>
+    <li><h3>Strategy or fraud</h3>Learn to tell them apart: plenty of on-screen “heroes” ended up in court.</li>
+    <li><h3>One lesson</h3>After each film, add one lesson to your trading journal.</li>
+  </ul>
+</section>
+
+<footer class="wrap">
+  <div class="foot">
+    <p class="slogan">The market teaches at a high price.<br>Cinema is cheaper.</p>
+    <div class="foot-actions">
+      <a class="btn btn-sm" href="#map">↖ Back to the map</a>
+      <button type="button" class="btn btn-sm" id="print">Print</button>
+      <button type="button" class="btn btn-sm" id="reset">Start over</button>
+    </div>
+  </div>
+  <p class="disc">© 2026 Dellgado.invest. An educational guide, not investment advice.</p>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+var LEVELS=[
+  {k:'1',name:'Beginner',tab:'Beginner',tag:'Start here',sub:'Markets, scams and the price of greed',desc:'Easy-to-watch films about markets, scams and the price of greed. No finance background needed.'},
+  {k:'2',name:'Intermediate',tab:'Intermediate',tag:'The next step',sub:'Risk, discipline and pressure',desc:'Risk, discipline and decisions under pressure. Basic market vocabulary helps.'},
+  {k:'3',name:'Advanced',tab:'Advanced',tag:'The deep end',sub:'Crises, CDS, LBOs and leverage',desc:'Crises, derivatives and corporate deals. Worth knowing what CDS, LBOs and leverage are.'},
+  {k:'4',name:'Expert',tab:'Expert',tag:'For practitioners',sub:'Microstructure, HFT and macro',desc:'Market microstructure, high-frequency trading, short selling and macroeconomics. For people who already trade.'},
+  {k:'S',name:'Series',tab:'Series',tag:'Bonus',sub:'When one film isn’t enough',desc:'Four series for long evenings, when one film isn’t enough.'}
+];
+var FILMS=[
+  {id:'trpl',lv:'1',sym:'TRPL',t:'Trading Places',y:'1983',g:'comedy',d:'The Duke brothers bet on whether a street hustler can become a broker. The finale plays out in the orange juice futures pit.',l:'How futures work, and the price of trading on inside information.'},
+  {id:'wlst',lv:'1',sym:'WLST',t:'Wall Street',y:'1987',g:'drama',d:'A young broker falls into Gordon Gekko’s orbit and starts trading on inside information. The origin of the line “Greed is good.”',l:'Profits from illegal information end in court, not on a yacht.'},
+  {id:'boil',lv:'1',sym:'BOIL',t:'Boiler Room',y:'2000',g:'drama',d:'A young man joins a firm that aggressively cold-calls investors to sell worthless stocks – the hot-tip machine seen from the inside.',l:'If someone calls with a “guaranteed” tip, you are the product.'},
+  {id:'wolf',lv:'1',sym:'WOLF',t:'The Wolf of Wall Street',y:'2013',g:'biopic',d:'The story of Jordan Belfort and Stratton Oakmont: penny stock pumping, millions in profit and zero accountability.',l:'Learn to spot a pump and dump before it spots you.'},
+  {id:'mnms',lv:'1',sym:'MNMS',t:'Money Monster',y:'2016',g:'thriller',d:'A TV finance host is taken hostage by a viewer who lost his savings on a stock the host recommended just before it crashed.',l:'Tips from a screen are no substitute for your own analysis.'},
+  {id:'gme',lv:'1',sym:'GME',t:'Dumb Money',y:'2023',g:'biopic',d:'The 2021 GameStop saga: retail investors from Reddit squeeze the hedge funds that were short the stock.',l:'What a short squeeze is, and how much power a crowd has in the market.'},
+  {id:'brk',lv:'1',sym:'BRK',t:'Becoming Warren Buffett',y:'2017',g:'documentary',d:'An HBO documentary about the investor who built his fortune over decades: daily habits, decisions and value investing principles.',l:'Compounding and patience beat adrenaline.'},
+  {id:'rndr',lv:'2',sym:'RNDR',t:'Rounders',y:'1998',g:'drama',d:'A gifted poker player returns to the tables to help a friend dig out of debt. A film about odds and self-control.',l:'Bankroll management and tilt – the same problems traders face.'},
+  {id:'rgue',lv:'2',sym:'RGUE',t:'Rogue Trader',y:'1999',g:'biopic',d:'In Singapore, Nick Leeson hides losses in an error account until, in 1995, he brings down Britain’s venerable Barings Bank.',l:'Don’t average down on losers, and don’t hide mistakes – they grow.'},
+  {id:'mbll',lv:'2',sym:'MBLL',t:'Moneyball',y:'2011',g:'biopic',d:'A low-budget baseball team uses statistics to find players the market undervalues. Not about the stock market – but all about edge.',l:'Data and a system beat gut feeling and “expert” hunches.'},
+  {id:'mrgn',lv:'2',sym:'MRGN',t:'Margin Call',y:'2011',g:'drama',d:'A risk analyst works out that a modest drop in prices would cause losses bigger than the whole firm is worth. 24 hours before the crisis.',l:'When the risk model breaks, whoever sells first wins.'},
+  {id:'geko',lv:'2',sym:'GEKO',t:'Wall Street: Money Never Sleeps',y:'2010',g:'drama',d:'Gordon Gekko leaves prison for a world on the edge of the 2008 crash. Leverage, moral hazard and bank bailouts.',l:'Leverage doesn’t just amplify profit – it accelerates collapse.'},
+  {id:'arbt',lv:'2',sym:'ARBT',t:'Arbitrage',y:'2012',g:'thriller',d:'A fund magnate races to sell his empire before anyone notices the hole worth hundreds of millions in its books.',l:'Results that look too good are a reason to check, not to invest.'},
+  {id:'eqty',lv:'2',sym:'EQTY',t:'Equity',y:'2016',g:'drama',d:'A senior investment banker prepares a tech company’s IPO while conflicts of interest and insider trading swirl around her.',l:'How an IPO works, and why every deal has more than one side.'},
+  {id:'shrt',lv:'3',sym:'SHRT',t:'The Big Short',y:'2015',g:'drama',d:'A handful of outsiders spot the US housing bubble and bet against it by buying credit default swaps (CDS).',l:'Being right too early is expensive – holding a position costs money.'},
+  {id:'tbtf',lv:'3',sym:'TBTF',t:'Too Big to Fail',y:'2011',g:'TV film',d:'HBO’s film about September 2008: the fall of Lehman Brothers and Treasury Secretary Henry Paulson’s fight to save the financial system.',l:'Systemic risk: why one bank’s failure becomes a chain reaction.'},
+  {id:'insj',lv:'3',sym:'INSJ',t:'Inside Job',y:'2010',g:'documentary',d:'The Oscar-winning documentary on the causes of the 2008 crisis: deregulation, rating agencies and conflicts of interest.',l:'Understand the system you trade in, and who really profits from it.'},
+  {id:'opm',lv:'3',sym:'OPM',t:'Other People’s Money',y:'1991',g:'comedy',d:'A corporate “liquidator” sets out to take over an old wire and cable factory. Famous for its shareholder-meeting speech about value.',l:'A company is sometimes worth more broken up than running – learn to value.'},
+  {id:'rjr',lv:'3',sym:'RJR',t:'Barbarians at the Gate',y:'1993',g:'TV film',d:'The 1988 battle for RJR Nabisco – the largest leveraged buyout (LBO) of its time and a Wall Street bidding war.',l:'How LBOs, debt and price negotiations work.'},
+  {id:'mdff',lv:'3',sym:'MDFF',t:'The Wizard of Lies',y:'2017',g:'TV film',d:'Robert De Niro plays Bernie Madoff, architect of the largest Ponzi scheme in history, and shows the toll it took on his family.',l:'Steady returns with no losing months are a red flag.'},
+  {id:'ene',lv:'3',sym:'ENE',t:'Enron: The Smartest Guys in the Room',y:'2005',g:'documentary',d:'How an energy giant hid losses with accounting tricks while its traders profited from the California electricity crisis.',l:'Read the financial statements – especially what’s missing from them.'},
+  {id:'ptj',lv:'4',sym:'PTJ',t:'Trader',y:'1987',g:'documentary',d:'A PBS documentary on Paul Tudor Jones, filmed before the 1987 crash he saw coming. Hard to find, but legendary.',l:'Protect your capital first – profits come from discipline.'},
+  {id:'pit',lv:'4',sym:'PIT',t:'Floored',y:'2009',g:'documentary',d:'Chicago’s pit traders, whose open-outcry world is being pushed out by computers and electronic trading.',l:'Market structure changes – the ones who adapt survive.'},
+  {id:'pi',lv:'4',sym:'PI',t:'Pi',y:'1998',g:'thriller',d:'Darren Aronofsky’s debut: a mathematician obsessed with finding a hidden numerical pattern in stock prices.',l:'Not every repetition is a pattern – beware of overfitting.'},
+  {id:'hft',lv:'4',sym:'HFT',t:'The Hummingbird Project',y:'2018',g:'drama',d:'Two cousins lay a fibre-optic line from Kansas to the New York exchange’s servers to gain a millisecond over other HFT players.',l:'Latency arbitrage: every technological edge is temporary.'},
+  {id:'hlf',lv:'4',sym:'HLF',t:'Betting on Zero',y:'2016',g:'documentary',d:'Bill Ackman publicly bets a billion dollars against Herbalife, calling it a pyramid scheme. The anatomy of an activist short.',l:'A correct thesis doesn’t guarantee profit – the market can disagree for a long time.'},
+  {id:'rto',lv:'4',sym:'RTO',t:'The China Hustle',y:'2017',g:'documentary',d:'How dubious Chinese companies reached US exchanges through reverse mergers, and how short sellers exposed the fraud.',l:'Your own due diligence is the best protection.'},
+  {id:'fed',lv:'4',sym:'FED',t:'Money for Nothing',y:'2013',g:'documentary',d:'“Inside the Federal Reserve”: the history and decisions of the US central bank that set interest rates and move every market.',l:'Interest rates move prices more than any chart.'},
+  {id:'blns',lv:'S',sym:'BLNS',t:'Billions',y:'2016–2023',g:'series',d:'A hedge fund manager versus a federal prosecutor: information, influence and risk.',l:'Information is both the biggest asset and the biggest risk.'},
+  {id:'ind',lv:'S',sym:'IND',t:'Industry',y:'2020–',g:'series',d:'Young graduates fight for a permanent place at a London investment bank. Harsh, but realistic.',l:'Your first years in the market shape your habits for life.'},
+  {id:'bkmn',lv:'S',sym:'BKMN',t:'Black Monday',y:'2019–2021',g:'satirical series',d:'A satirical comedy about who “caused” the stock market crash of October 19, 1987.',l:'Crashes repeat – prepare before, not during.'},
+  {id:'drty',lv:'S',sym:'DRTY',t:'Dirty Money',y:'2018–2020',g:'documentary series',d:'A Netflix documentary series about corporate fraud and greed.',l:'Any story that seems too good deserves a second check.'}
+];
+var BUBBLES=[
+  {id:'gme',txt:'What is a short squeeze?',x:3,y:2,d:6.5},
+  {id:'mbll',txt:'Data beats gut feeling',x:23,y:6,d:8},
+  {id:'shrt',txt:'Being right too early is expensive',x:9,y:30,d:7.2},
+  {id:'ptj',txt:'Protect your capital first',x:63,y:60,d:7.8},
+  {id:'rgue',txt:'Don’t average down on losers',x:80,y:70,d:6.8},
+  {id:'mdff',txt:'Too good to be true',x:42,y:76,d:8.6}
+];
+var ROUTE=['trpl','mrgn','shrt','ptj'];
+var KEY='filmai-traderiams-v1', THEME_KEY='filmai-traderiams-tema';
+var CHECK='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>';
+var MAIN=FILMS.filter(function(f){return f.lv!=='S'});
+var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function $(s,r){return (r||document).querySelector(s)}
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function secId(k){return k==='S'?'series':'level-'+k}
+function byId(id){for(var i=0;i<FILMS.length;i++){if(FILMS[i].id===id)return FILMS[i]}return null}
+function lvFilms(k){return FILMS.filter(function(f){return f.lv===k})}
+function lvName(k){for(var i=0;i<LEVELS.length;i++){if(LEVELS[i].k===k)return LEVELS[i].name}return ''}
+
+/* state */
+var state={w:{},r:{},t:0};
+try{var saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved&&saved.w){state={w:saved.w||{},r:saved.r||{},t:saved.t||0}}}catch(e){}
+function save(){state.t=Date.now();try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}queueCloud()}
+
+/* render */
+function renderTicker(){
+  function item(f,dup){return '<a class="tick" href="#f-'+f.id+'" data-film="'+f.id+'"'+(dup?' tabindex="-1"':'')+'><span class="tick-st"></span><b>'+esc(f.sym)+'</b><span>'+esc(f.t)+'</span><span class="y">'+esc(f.y)+'</span></a>'}
+  $('#ticker').innerHTML='<div class="tick-set">'+MAIN.map(function(f){return item(f,false)}).join('')+'</div><div class="tick-set" aria-hidden="true">'+MAIN.map(function(f){return item(f,true)}).join('')+'</div>';
+}
+function renderChart(){
+  var cs=MAIN.map(function(f,i){
+    var g=Math.floor(i/7), j=i%7, x=40+g*214+j*24+12;
+    var t=330-i*8.4+(j===0&&g>0?12:0), up=[1,1,0,1,1,0,1][j], v=(i*53)%5, top, bot;
+    if(up){top=t-14-v;bot=t+10+v}else{top=t-6;bot=t+12+v}
+    return {f:f,x:x,up:up,top:top,bot:bot,wt:top-9-(i%3)*3,wb:bot+8,g:g};
+  });
+  var h='';
+  [100,170,240,310].forEach(function(y){h+='<line class="grid-l" x1="0" y1="'+y+'" x2="1000" y2="'+y+'"/>'});
+  h+='<line class="grid-l" x1="0" y1="368" x2="1000" y2="368" style="stroke-dasharray:none"/>';
+  for(var g=0;g<4;g++){
+    var gs=cs.filter(function(c){return c.g===g});
+    var cx=(gs[0].x+gs[6].x)/2, minY=Math.min.apply(null,gs.map(function(c){return c.wt})), py=minY-46;
+    var L=LEVELS[g];
+    h+='<a class="pin" href="#'+secId(L.k)+'" aria-label="Level '+L.k+': '+esc(L.name)+'"><line class="pin-line" x1="'+cx+'" y1="'+(py+22)+'" x2="'+cx+'" y2="'+(minY-6)+'"/><circle cx="'+cx+'" cy="'+py+'" r="20"/><text x="'+cx+'" y="'+(py+1)+'">'+L.k+'</text></a>';
+  }
+  h+='<a class="pin" href="#series" aria-label="Series"><line class="pin-line" x1="858" y1="62" x2="916" y2="62"/><circle cx="940" cy="62" r="20"/><text x="940" y="63">S</text></a>';
+  cs.forEach(function(c){
+    h+='<a class="c'+(c.up?' up':'')+'" href="#f-'+c.f.id+'" data-film="'+c.f.id+'" aria-label="'+esc(c.f.t)+', '+esc(c.f.y)+'">'+
+      '<rect class="c-hit" x="'+(c.x-12)+'" y="'+(c.wt-6)+'" width="24" height="'+(c.wb-c.wt+12)+'" rx="4"/>'+
+      '<line class="c-wick" x1="'+c.x+'" y1="'+c.wt+'" x2="'+c.x+'" y2="'+c.wb+'"/>'+
+      '<rect class="c-body" x="'+(c.x-7)+'" y="'+c.top+'" width="14" height="'+(c.bot-c.top)+'" rx="2"/></a>';
+  });
+  $('#chart').innerHTML=h;
+}
+function renderBubbles(){
+  $('#bubbles').innerHTML=BUBBLES.map(function(b,i){
+    var f=byId(b.id);
+    return '<button type="button" class="bubble" data-bubble="'+b.id+'" style="left:'+b.x+'%;top:'+b.y+'%" aria-label="'+esc(b.txt)+'. Open: '+esc(f.t)+'"><span class="bubble-in" style="--dur:'+b.d+'s;--delay:'+(-i*1.3)+'s"><b>'+esc(f.sym)+'</b>'+esc(b.txt)+'</span></button>';
+  }).join('');
+}
+function renderToc(){
+  $('#toc').innerHTML=LEVELS.map(function(L){
+    var n=lvFilms(L.k).length;
+    return '<a class="toc-item" href="#'+secId(L.k)+'"><span class="toc-num">'+L.k+'</span><span><span class="toc-name">'+esc(L.name)+'</span><span class="toc-sub">'+esc(L.sub)+'</span></span><span class="toc-count"><span data-count="'+L.k+'">0</span>/'+n+'</span><span class="toc-bar"><i data-bar="'+L.k+'"></i></span></a>';
+  }).join('');
+  var cells='';for(var i=0;i<MAIN.length;i++){cells+='<i data-cell="'+MAIN[i].id+'"></i>'}
+  $('#cells').innerHTML=cells;
+}
+function renderTabs(){
+  $('#tabs').innerHTML=LEVELS.map(function(L){
+    return '<a class="tab" href="#'+secId(L.k)+'"><span class="tab-k">'+L.k+'</span><span class="tab-name">'+esc(L.tab)+'</span><span class="tab-c"><span data-count="'+L.k+'">0</span>/'+lvFilms(L.k).length+'</span></a>';
+  }).join('');
+}
+function filmHtml(f){
+  var bars='';
+  for(var n=1;n<=5;n++){bars+='<button type="button" class="r" data-rate="'+f.id+'" data-n="'+n+'" aria-label="Rate '+n+' out of 5" aria-pressed="false"><i style="height:'+(6+n*5)+'px"></i></button>'}
+  return '<li class="film" id="f-'+f.id+'">'+
+    '<div class="film-row">'+
+      '<label class="watch"><input type="checkbox" data-watch="'+f.id+'" aria-label="Watched: '+esc(f.t)+'"><span class="box">'+CHECK+'</span></label>'+
+      '<span class="sym" aria-hidden="true">'+esc(f.sym)+'</span>'+
+      '<div class="film-main"><h3>'+esc(f.t)+'</h3><p>'+esc(f.d)+'</p></div>'+
+      '<span class="meta">'+esc(f.y)+', '+esc(f.g)+'</span>'+
+      '<button type="button" class="exp" aria-expanded="false" aria-controls="m-'+f.id+'" aria-label="Lesson and rating: '+esc(f.t)+'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>'+
+    '</div>'+
+    '<div class="film-more" id="m-'+f.id+'"><div class="film-more-in" inert><div class="film-more-pad">'+
+      '<p class="lesson"><strong>Lesson.</strong> '+esc(f.l)+'</p>'+
+      '<div class="rate"><span class="rate-label">Your rating</span><span class="bars" role="group" aria-label="Rating: '+esc(f.t)+'">'+bars+'</span><span class="rate-val" data-rv="'+f.id+'">Not rated yet</span></div>'+
+    '</div></div></div></li>';
+}
+function renderLevels(){
+  $('#levels').innerHTML=LEVELS.map(function(L){
+    var fs=lvFilms(L.k), meter='';
+    for(var i=0;i<fs.length;i++){meter+='<i></i>'}
+    return '<section class="level" id="'+secId(L.k)+'" aria-labelledby="h-'+L.k+'">'+
+      '<header class="level-head">'+
+        '<h2 class="level-title" id="h-'+L.k+'"><span class="level-num">'+L.k+'</span><span class="level-name">'+esc(L.name)+'<small>'+esc(L.tag)+'</small></span></h2>'+
+        '<p class="level-desc">'+esc(L.desc)+'</p>'+
+        '<div class="level-side"><span class="done-badge">'+CHECK+(L.k==='S'?'All watched':'Level complete')+'</span><div class="level-count"><b data-count="'+L.k+'">0</b> of '+fs.length+'</div><div class="meter" aria-hidden="true">'+meter+'</div><a class="back" href="#map">↖ Back to the map</a></div>'+
+      '</header>'+
+      '<ul class="films">'+fs.map(filmHtml).join('')+'</ul>'+
+      '<p class="empty" data-empty="'+L.k+'" hidden></p>'+
+    '</section>';
+  }).join('');
+}
+function renderRoute(){
+  $('#steps').innerHTML=ROUTE.map(function(id,i){
+    var f=byId(id);
+    return '<a class="step" href="#f-'+id+'" data-film="'+id+'"><span class="step-ok" aria-hidden="true">'+CHECK+'</span><span class="step-k">Night '+(i+1)+'</span><span class="step-t">'+esc(f.t)+'</span><span class="step-l">Level '+f.lv+', '+esc(lvName(f.lv)).toLowerCase()+'</span></a>';
+  }).join('');
+}
+
+/* sync DOM to state */
+function update(){
+  var w=state.w;
+  FILMS.forEach(function(f){
+    var on=!!w[f.id], li=document.getElementById('f-'+f.id);
+    li.classList.toggle('watched',on);
+    var cb=li.querySelector('[data-watch]'); if(cb.checked!==on)cb.checked=on;
+    var r=state.r[f.id]||0;
+    $$('.r',li).forEach(function(b){var n=+b.dataset.n;b.classList.toggle('on',n<=r);b.setAttribute('aria-pressed',String(n===r))});
+    li.querySelector('[data-rv]').textContent=r?(r+' out of 5'):'Not rated yet';
+  });
+  $$('.c').forEach(function(a){a.classList.toggle('watched',!!w[a.dataset.film])});
+  $$('.tick').forEach(function(a){a.classList.toggle('on',!!w[a.dataset.film])});
+  $$('[data-cell]').forEach(function(c){c.classList.toggle('on',!!w[c.dataset.cell])});
+  $$('.step').forEach(function(s){s.classList.toggle('done',!!w[s.dataset.film])});
+  LEVELS.forEach(function(L){
+    var fs=lvFilms(L.k), c=fs.filter(function(f){return w[f.id]}).length;
+    $$('[data-count="'+L.k+'"]').forEach(function(e){e.textContent=c});
+    $$('[data-bar="'+L.k+'"]').forEach(function(e){e.style.width=(c/fs.length*100)+'%'});
+    var sec=document.getElementById(secId(L.k));
+    sec.classList.toggle('done',c===fs.length);
+    $$('.meter i',sec).forEach(function(e,ix){e.classList.toggle('on',ix<c)});
+  });
+  var n=MAIN.filter(function(f){return w[f.id]}).length;
+  $('#pf-n').textContent=n;
+  $('#pf-ret').textContent='+'+Math.round(n/MAIN.length*100)+'%';
+  updateEmpty();
+}
+function updateEmpty(){
+  var flt=document.body.dataset.filter||'all';
+  LEVELS.forEach(function(L){
+    var fs=lvFilms(L.k), c=fs.filter(function(f){return state.w[f.id]}).length, msg='';
+    if(flt==='unwatched'&&c===fs.length)msg='You’ve watched everything in this section.';
+    if(flt==='watched'&&c===0)msg='Nothing ticked here yet. Tick a film you’ve watched using the box on the left.';
+    var e=$('[data-empty="'+L.k+'"]'); e.textContent=msg; e.hidden=!msg;
+  });
+}
+
+/* actions */
+function toggle(li,force){
+  var open=(typeof force==='boolean')?force:!li.classList.contains('open');
+  li.classList.toggle('open',open);
+  li.querySelector('.exp').setAttribute('aria-expanded',String(open));
+  var inr=li.querySelector('.film-more-in');
+  if(open)inr.removeAttribute('inert');else inr.setAttribute('inert','');
+}
+function setFilter(v){
+  document.body.dataset.filter=v;
+  var r=$('input[name="flt"][value="'+v+'"]'); if(r)r.checked=true;
+  updateEmpty();
+}
+function jumpTo(id){
+  var li=document.getElementById('f-'+id); if(!li)return;
+  var flt=document.body.dataset.filter;
+  if((flt==='unwatched'&&state.w[id])||(flt==='watched'&&!state.w[id]))setFilter('all');
+  toggle(li,true);
+  li.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'});
+  li.classList.remove('flash'); void li.offsetWidth; li.classList.add('flash');
+}
+function pick(){
+  var pool=MAIN.filter(function(f){return !state.w[f.id]});
+  if(!pool.length)pool=FILMS.filter(function(f){return !state.w[f.id]});
+  if(!pool.length){toast('You’ve watched everything. Time to reread the lessons.');return}
+  var f=pool[Math.floor(Math.random()*pool.length)];
+  jumpTo(f.id);
+  toast('Tonight’s film: '+f.t+' ('+f.y+').');
+}
+function levelDone(k){return lvFilms(k).every(function(f){return state.w[f.id]})}
+function allMainDone(){return MAIN.every(function(f){return state.w[f.id]})}
+function goTo(sel){var el=document.getElementById(sel);if(el)el.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'})}
+function celebrate(k,wasAll){
+  if(k!=='S'&&!wasAll&&allMainDone()){toast('All 28 films watched. Portfolio +100%.',{label:'To the series',fn:function(){goTo('series')}});return}
+  var next={'1':['Level 1 complete. On to intermediate.','To level 2','level-2'],'2':['Level 2 complete. Next up: advanced.','To level 3','level-3'],'3':['Level 3 complete. Only the expert documentaries left.','To level 4','level-4'],'4':['Expert level complete.','To the series','series'],'S':['All series watched.','To the route','route']}[k];
+  toast(next[0],{label:next[1],fn:function(){goTo(next[2])}});
+}
+var tt=null;
+function toast(msg,action){
+  var el=$('#toast'); el.innerHTML='';
+  var s=document.createElement('span'); s.textContent=msg; el.appendChild(s);
+  if(action){var b=document.createElement('button');b.type='button';b.className='btn btn-sm btn-accent';b.textContent=action.label;b.addEventListener('click',function(){el.classList.remove('show');action.fn()});el.appendChild(b)}
+  el.classList.add('show'); clearTimeout(tt); tt=setTimeout(function(){el.classList.remove('show')},5600);
+}
+
+/* events */
+document.addEventListener('change',function(e){
+  var cb=e.target.closest&&e.target.closest('[data-watch]');
+  if(cb){
+    var id=cb.dataset.watch, f=byId(id), before=levelDone(f.lv), wasAll=allMainDone();
+    if(cb.checked)state.w[id]=true;else delete state.w[id];
+    save(); update();
+    if(cb.checked&&!before&&levelDone(f.lv))celebrate(f.lv,wasAll);
+    return;
+  }
+  if(e.target.name==='flt')setFilter(e.target.value);
+});
+document.addEventListener('click',function(e){
+  var t=e.target;
+  var rate=t.closest('[data-rate]');
+  if(rate){var id=rate.dataset.rate,n=+rate.dataset.n;if(state.r[id]===n)delete state.r[id];else state.r[id]=n;save();update();return}
+  var exp=t.closest('.exp'); if(exp){toggle(exp.closest('.film'));return}
+  var jump=t.closest('[data-film]'); if(jump){e.preventDefault();jumpTo(jump.dataset.film);return}
+  if(t.closest('[data-pick]')){pick();return}
+  var row=t.closest('.film-row');
+  if(row&&!t.closest('label,button,a,input'))toggle(row.closest('.film'));
+});
+
+/* draggable bubbles */
+function initBubbles(){
+  $$('.bubble').forEach(function(btn){
+    var sx=0,sy=0,ox=0,oy=0,down=false,moved=false,suppress=false;
+    btn.addEventListener('pointerdown',function(e){down=true;moved=false;sx=e.clientX;sy=e.clientY;try{btn.setPointerCapture(e.pointerId)}catch(_){}});
+    btn.addEventListener('pointermove',function(e){
+      if(!down)return;
+      var dx=e.clientX-sx,dy=e.clientY-sy;
+      if(!moved&&Math.sqrt(dx*dx+dy*dy)>5){moved=true;btn.classList.add('drag')}
+      if(moved){btn.style.setProperty('--dx',(ox+dx)+'px');btn.style.setProperty('--dy',(oy+dy)+'px')}
+    });
+    function end(e){
+      if(!down)return; down=false;
+      if(moved){ox+=e.clientX-sx;oy+=e.clientY-sy;btn.classList.remove('drag');suppress=true}
+    }
+    btn.addEventListener('pointerup',end);
+    btn.addEventListener('pointercancel',end);
+    btn.addEventListener('click',function(e){e.stopPropagation();if(suppress){suppress=false;return}jumpTo(btn.dataset.bubble)});
+  });
+}
+
+/* lights (theme) */
+function isDark(){var t=document.documentElement.dataset.theme;if(t)return t==='dark';return window.matchMedia('(prefers-color-scheme: dark)').matches}
+function lightsLabel(){$('#lights-t').textContent=isDark()?'Lights up':'Dim the lights'}
+function initLights(){
+  try{var t=localStorage.getItem(THEME_KEY);if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}
+  lightsLabel();
+  $('#lights').addEventListener('click',function(){
+    var t=isDark()?'light':'dark';
+    document.documentElement.dataset.theme=t;
+    try{localStorage.setItem(THEME_KEY,t)}catch(e){}
+    lightsLabel();
+  });
+  try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',lightsLabel)}catch(e){}
+}
+
+/* footer actions */
+function initFooter(){
+  $('#print').addEventListener('click',function(){try{window.print()}catch(e){}});
+  var rb=$('#reset'), armed=false, at=null;
+  rb.addEventListener('click',function(){
+    if(!armed){armed=true;rb.textContent='Clear everything?';clearTimeout(at);at=setTimeout(function(){armed=false;rb.textContent='Start over'},4000);return}
+    armed=false;clearTimeout(at);rb.textContent='Start over';
+    state={w:{},r:{},t:0};save();update();toast('All ticks cleared.');
+  });
+}
+
+/* cross-device sync when opened inside claude.ai; does nothing elsewhere */
+var ref=null, writing=Promise.resolve(), pending=null;
+function queueCloud(){
+  if(!ref)return;
+  clearTimeout(pending);
+  pending=setTimeout(function(){
+    var body={w:state.w,r:state.r,t:state.t};
+    writing=writing.then(function(){return ref.set(body)}).catch(function(){});
+  },900);
+}
+function initCloud(){
+  if(!window.claude||typeof window.claude.use!=='function')return;
+  Promise.all([window.claude.use('db'),window.claude.use('user')]).then(function(res){
+    var db=res[0],user=res[1]; if(!db||!user)return null;
+    return user.id().then(function(uid){
+      if(!uid)return null;
+      var r=db.doc('data/users/'+uid+'/progress');
+      var timeout=new Promise(function(_,rej){setTimeout(function(){rej(new Error('timeout'))},10000)});
+      return Promise.race([r.get(),timeout]).then(function(snap){
+        ref=r;
+        var d=snap&&snap.exists?snap.data():null;
+        if(d&&(d.t||0)>(state.t||0)){
+          var w={},rt={},k;
+          for(k in (d.w||{}))w[k]=!!d.w[k];
+          for(k in (d.r||{}))rt[k]=+d.r[k];
+          state={w:w,r:rt,t:d.t};
+          try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}
+          update();
+        }else if(state.t&&(!d||(state.t>(d.t||0)))){queueCloud()}
+      });
+    });
+  }).catch(function(){ref=null});
+}
+
+renderTicker(); renderChart(); renderBubbles(); renderToc(); renderTabs(); renderLevels(); renderRoute();
+update(); initBubbles(); initLights(); initFooter(); initCloud();
+})();
+</script>
+</body>
+</html>
