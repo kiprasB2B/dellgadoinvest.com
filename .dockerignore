@@ -1,0 +1,7 @@
+.git
+.github
+build
+tests
+*.md
+Dockerfile
+render.yaml
